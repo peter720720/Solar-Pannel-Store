@@ -263,8 +263,10 @@
 import React, { useState } from 'react';
 import { Mail, User, Phone, MessageSquare, Send, Loader2, Calendar, AlertCircle, CheckCircle2, ShieldCheck, Sun, Zap } from 'lucide-react';
 import { API_BASE_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Message() {
+  const { token } = useAuth();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState({ type: '', text: '' });
@@ -279,9 +281,12 @@ export default function Message() {
     setStatus({ type: '', text: '' });
 
     try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const res = await fetch(`${API_BASE_URL}/api/messages`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(formData),
       });
 
