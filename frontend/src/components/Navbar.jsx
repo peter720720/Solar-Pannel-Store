@@ -332,7 +332,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           
           {/* Brand Logo Link with pointer pointer */}
-          <Link to="/" className="flex items-center space-x-2 group cursor-pointer">
+          <Link to={user?.role === 'admin' ? '/collections' : '/'} className="flex items-center space-x-2 group cursor-pointer">
             <SunDim className="h-8 w-8 text-amber-500 animate-spin-slow group-hover:scale-110 transition-transform" />
             <span className="text-xl font-black bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent tracking-tighter uppercase">
               SolarStore
@@ -341,7 +341,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation Links links */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className={linkClass('/')}>Home</Link>
+            {user?.role !== 'admin' && <Link to="/" className={linkClass('/')}>Home</Link>}
             
             {user ? (
               <>
@@ -409,23 +409,22 @@ export default function Navbar() {
       {/* Slide-out Mobile Overlay Menu Menu */}
       <div className={`md:hidden absolute top-20 left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-xl transition-all duration-300 ease-in-out origin-top transform ${isOpen ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0 pointer-events-none'}`}>
         <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
-          <Link to="/" onClick={() => setIsOpen(false)} className={mobileLinkClass('/')}>Home</Link>
           {user ? (
             <>
+              {user.role !== 'admin' && (
+                <Link to="/" onClick={() => setIsOpen(false)} className={mobileLinkClass('/')}>Home</Link>
+              )}
               <Link to="/collections" onClick={() => setIsOpen(false)} className={mobileLinkClass('/collections')}>Collections</Link>
-              
-              {/* Mobile Dropdown Menu Block Update */}
               <Link 
-                to={user?.role === 'admin' ? '/admin-message' : '/user-message'} 
+                to={user.role === 'admin' ? '/admin-message' : '/user-message'} 
                 onClick={() => setIsOpen(false)} 
-                className={mobileLinkClass(user?.role === 'admin' ? '/admin-message' : '/user-message')}
+                className={mobileLinkClass(user.role === 'admin' ? '/admin-message' : '/user-message')}
               >
                 Messages
               </Link>
-              
               {user.role === 'admin' && (
                 <Link to="/admin/dashboard" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-md text-base font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/20 cursor-pointer">
-                  Admin Dashboard
+                  Dashboard
                 </Link>
               )}
               <button onClick={handleLogout} className="w-full text-left flex items-center gap-2 px-4 py-3 rounded-md text-base font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer">

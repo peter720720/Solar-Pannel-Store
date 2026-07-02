@@ -295,6 +295,7 @@ export default function Message() {
 
       setStatus({ type: 'success', text: 'Booking inquiry submitted successfully!' });
       setFormData({ name: '', email: '', phone: '', message: '' });
+      window.dispatchEvent(new Event('messageSubmitted'));
     } catch (err) {
       setStatus({ type: 'error', text: err.message });
     } finally {

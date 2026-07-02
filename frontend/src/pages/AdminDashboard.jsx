@@ -510,6 +510,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { API_BASE_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext.jsx';
 import { Link } from 'react-router-dom';
 import { 
   ShieldAlert, Package, Mail, ShoppingBag, Users, 
@@ -528,14 +529,20 @@ export default function AdminDashboard() {
   
   const fileInputRef = useRef(null);
 
+  const { token } = useAuth();
+
   useEffect(() => {
+    let intervalId;
+
     const fetchDashboardMetrics = async () => {
       try {
+        setLoading(true);
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const [prodRes, userRes, msgRes, orderRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/api/products`),
-          fetch(`${API_BASE_URL}/api/users`),
-          fetch(`${API_BASE_URL}/api/messages`),
-          fetch(`${API_BASE_URL}/api/orders`)
+          fetch(`${API_BASE_URL}/api/products`, { headers }),
+          fetch(`${API_BASE_URL}/api/users`, { headers }),
+          fetch(`${API_BASE_URL}/api/messages`, { headers }),
+          fetch(`${API_BASE_URL}/api/orders`, { headers })
         ]);
 
         const productsData = prodRes.ok ? await prodRes.json() : [];
@@ -556,8 +563,21 @@ export default function AdminDashboard() {
       }
     };
 
-    fetchDashboardMetrics();
-  }, []);
+    const handleMessageSubmitted = () => {
+      if (token) fetchDashboardMetrics();
+    };
+
+    if (token) {
+      fetchDashboardMetrics();
+      intervalId = setInterval(fetchDashboardMetrics, 15000);
+      window.addEventListener('messageSubmitted', handleMessageSubmitted);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      window.removeEventListener('messageSubmitted', handleMessageSubmitted);
+    };
+  }, [token]);
 
   // Intercept raw file picks and map them into locally editable object drafts
   const handleFileSelectionIntercept = (e) => {
