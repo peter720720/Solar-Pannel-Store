@@ -167,6 +167,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Package, Trash2, Eye, Loader2, Info } from 'lucide-react';
 import { API_BASE_URL } from '../config/api';
+import getImageUrl from '../utils/getImageUrl';
 import NotificationModal from '../components/NotificationModal.jsx';
 
 export default function Collections() {
@@ -284,11 +285,11 @@ export default function Collections() {
                 )}
 
                 <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-950 border-b border-white/10">
-                  <img 
-                    src={product.image || '/placeholder-solar.jpg'} 
+                  <img
+                    src={getImageUrl(product.image || product.images?.[0])}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => { e.target.src = 'https://unsplash.com'; }}
+                    onError={(e) => { e.target.src = '/placeholder-solar.jpg'; }}
                   />
                 </div>
 
