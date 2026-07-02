@@ -262,6 +262,7 @@
 
 import React, { useState } from 'react';
 import { Mail, User, Phone, MessageSquare, Send, Loader2, Calendar, AlertCircle, CheckCircle2, ShieldCheck, Sun, Zap } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 export default function Message() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
@@ -278,7 +279,7 @@ export default function Message() {
     setStatus({ type: '', text: '' });
 
     try {
-      const res = await fetch('http://localhost:5000/api/messages', {
+      const res = await fetch(`${API_BASE_URL}/api/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

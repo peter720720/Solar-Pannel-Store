@@ -166,6 +166,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Package, Trash2, Eye, Loader2, Info } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 import NotificationModal from '../components/NotificationModal.jsx';
 
 export default function Collections() {
@@ -180,7 +181,7 @@ export default function Collections() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/products');
+      const res = await fetch(`${API_BASE_URL}/api/products`);
       if (res.ok) {
         const data = await res.json();
         setProducts(Array.isArray(data) ? data : []);
@@ -207,7 +208,7 @@ export default function Collections() {
     setModal({ isOpen: false, targetId: null, message: '' });
     
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {

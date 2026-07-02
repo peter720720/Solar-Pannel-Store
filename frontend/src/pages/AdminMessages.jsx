@@ -281,6 +281,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, MessageSquare, Loader2, Trash2, ArrowLeft, Send, User, CornerUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
 
 export default function AdminMessages() {
   const [inboxMessages, setInboxMessages] = useState([]);
@@ -293,7 +294,7 @@ export default function AdminMessages() {
 
   const fetchInbox = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/messages');
+      const res = await fetch(`${API_BASE_URL}/api/messages`);
       if (res.ok) {
         const data = await res.json();
         setInboxMessages(Array.isArray(data) ? data : []);
@@ -310,7 +311,7 @@ export default function AdminMessages() {
     e.stopPropagation(); // Avoid switching selection when clicking delete
     if (!window.confirm("Delete this consultation record?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/messages/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/api/messages/${id}`, { method: 'DELETE' });
       if (res.ok) {
         const remaining = inboxMessages.filter(msg => msg._id !== id);
         setInboxMessages(remaining);

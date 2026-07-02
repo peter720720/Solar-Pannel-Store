@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, KeyRound } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ export default function ForgotPassword() {
 
     try {
       // Replace with your actual backend endpoint configuration
-const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

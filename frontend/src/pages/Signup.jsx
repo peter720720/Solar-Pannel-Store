@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SunDim, User, Mail, Lock, AlertCircle } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 export default function Signup() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -18,7 +19,7 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/user/signup', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/user/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

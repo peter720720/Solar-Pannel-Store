@@ -145,6 +145,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { API_BASE_URL } from '../config/api';
 import { SunDim, Mail, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function Login() {
@@ -168,7 +169,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/user/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/user/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

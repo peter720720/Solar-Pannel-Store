@@ -509,6 +509,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../config/api';
 import { Link } from 'react-router-dom';
 import { 
   ShieldAlert, Package, Mail, ShoppingBag, Users, 
@@ -531,10 +532,10 @@ export default function AdminDashboard() {
     const fetchDashboardMetrics = async () => {
       try {
         const [prodRes, userRes, msgRes, orderRes] = await Promise.all([
-          fetch('http://localhost:5000/api/products'),
-          fetch('http://localhost:5000/api/users'),
-          fetch('http://localhost:5000/api/messages'),
-          fetch('http://localhost:5000/api/orders')
+          fetch(`${API_BASE_URL}/api/products`),
+          fetch(`${API_BASE_URL}/api/users`),
+          fetch(`${API_BASE_URL}/api/messages`),
+          fetch(`${API_BASE_URL}/api/orders`)
         ]);
 
         const productsData = prodRes.ok ? await prodRes.json() : [];
@@ -610,7 +611,7 @@ export default function AdminDashboard() {
     });
 
     try {
-      const response = await fetch('http://localhost:5000/api/products/upload-multiple', {
+      const response = await fetch(`${API_BASE_URL}/api/products/upload-multiple`, {
         method: 'POST',
         body: formData,
       });

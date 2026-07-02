@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Key, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 export default function AdminSignup() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', adminKey: '' });
@@ -18,7 +19,7 @@ export default function AdminSignup() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/admin/signup', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/admin/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

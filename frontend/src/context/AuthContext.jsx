@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }) => {
       }
       try {
         // Synchronize browser session against your running profiles endpoint
-        const res = await fetch('http://localhost:5000/api/users/profile', {
+        const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
