@@ -310,6 +310,8 @@ export default function Navbar() {
     navigate('/');
   };
 
+  const isAdmin = user?.role === 'admin';
+  const messageRoute = isAdmin ? '/admin-message' : '/user-message';
   const isActive = (path) => location.pathname === path;
 
   const linkClass = (path) => `
@@ -341,7 +343,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation Links links */}
           <div className="hidden md:flex items-center space-x-6">
-            {user?.role !== 'admin' && <Link to="/" className={linkClass('/')}>Home</Link>}
+            {!isAdmin && <Link to="/" className={linkClass('/')}>Home</Link>}
             
             {user ? (
               <>
@@ -349,8 +351,8 @@ export default function Navbar() {
                 
                 {/* Desktop Menu Block Update */}
                 <Link 
-                  to={user?.role === 'admin' ? '/admin-message' : '/user-message'} 
-                  className={linkClass(user?.role === 'admin' ? '/admin-message' : '/user-message')}
+                  to={messageRoute} 
+                  className={linkClass(messageRoute)}
                 >
                   Messages
                 </Link>
@@ -411,14 +413,14 @@ export default function Navbar() {
         <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
           {user ? (
             <>
-              {user.role !== 'admin' && (
+              {!isAdmin && (
                 <Link to="/" onClick={() => setIsOpen(false)} className={mobileLinkClass('/')}>Home</Link>
               )}
               <Link to="/collections" onClick={() => setIsOpen(false)} className={mobileLinkClass('/collections')}>Collections</Link>
               <Link 
-                to={user.role === 'admin' ? '/admin-message' : '/user-message'} 
+                to={messageRoute} 
                 onClick={() => setIsOpen(false)} 
-                className={mobileLinkClass(user.role === 'admin' ? '/admin-message' : '/user-message')}
+                className={mobileLinkClass(messageRoute)}
               >
                 Messages
               </Link>

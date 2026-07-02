@@ -250,6 +250,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin-signup" element={<AdminSignup />} />
             <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin/messages" element={<Navigate to="/admin-message" replace />} />
             
             {/* Authenticated Client Views */}
             <Route path="/collections" element={
@@ -274,6 +275,15 @@ function App() {
             <Route path="/admin-message" element={
               <AdminRoute>
                 <AdminMessages />
+              </AdminRoute>
+            } />
+
+            {/* Legacy redirections to current message paths */}
+            <Route path="/message" element={<Navigate to="/user-message" replace />} />
+            <Route path="/admin/messages" element={<Navigate to="/admin-message" replace />} />
+            <Route path="/admin" element={
+              <AdminRoute>
+                <Navigate to="/admin/dashboard" replace />
               </AdminRoute>
             } />
 
