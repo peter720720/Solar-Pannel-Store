@@ -282,6 +282,7 @@ import React, { useState, useEffect } from 'react';
 import { Mail, MessageSquare, Loader2, Trash2, ArrowLeft, Send, User, CornerUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function AdminMessages() {
   const [inboxMessages, setInboxMessages] = useState([]);
@@ -292,13 +293,21 @@ export default function AdminMessages() {
   const [replyText, setReplyText] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
 
+  const { token } = useAuth();
+
   const fetchInbox = async () => {
+    setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/messages`);
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE_URL}/api/messages`, { headers });
       if (res.ok) {
         const data = await res.json();
         setInboxMessages(Array.isArray(data) ? data : []);
         if (data.length > 0 && !activeReply) setActiveReply(data[0]);
+      } else {
+        console.error('Failed fetching inbox:', res.status);
       }
     } catch (err) {
       console.error("Inbox data download rejected:", err);
@@ -311,11 +320,16 @@ export default function AdminMessages() {
     e.stopPropagation(); // Avoid switching selection when clicking delete
     if (!window.confirm("Delete this consultation record?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/api/messages/${id}`, { method: 'DELETE' });
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE_URL}/api/messages/${id}`, { method: 'DELETE', headers });
       if (res.ok) {
         const remaining = inboxMessages.filter(msg => msg._id !== id);
         setInboxMessages(remaining);
         if (activeReply?._id === id) setActiveReply(remaining[0] || null);
+      } else {
+        console.error('Delete failed:', res.status);
       }
     } catch (err) {
       console.error(err);
