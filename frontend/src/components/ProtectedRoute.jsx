@@ -1,9 +1,10 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 export default function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   // Pause checks while context memory re-hydrates from storage on page refresh
   if (loading) {
@@ -20,6 +21,20 @@ export default function ProtectedRoute({ children }) {
   // If no session exists, force browser back to customer sign in portal
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // If an admin is trying to access a customer-only route, redirect them to admin dashboard.
+  if (user.role === 'admin') {
+    const adminRedirectRoutes = [
+      '/collections',
+      '/product',
+      '/message',
+      '/user-message',
+    ];
+
+    if (adminRedirectRoutes.some((route) => location.pathname.startsWith(route))) {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
   }
 
   return children;
